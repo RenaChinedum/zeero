@@ -24,8 +24,8 @@ This To-do app is a simple task management application that allows users to crea
 # Setup Instructions
 
 ## Prerequisites
-**Java 17+**
-**Maven 3.6+**
+- **Java 17+**
+- **Maven 3.6+**
 - Postman (for testing the API endpoints)
 - Swagger (for testing the API endpoints)
 
