@@ -33,7 +33,7 @@ This To-do app is a simple task management application that allows users to crea
 
 ### 1. Clone the repository:
 
-git clone https://github.com/your-repo/todo-app.git
+git clone https://github.com/RenaChinedum/zeero.git
 
 ### 2. Build the application:
  mvn clean install
