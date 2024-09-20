@@ -2,32 +2,32 @@
 This To-do app is a simple task management application that allows users to create, update, and manage their daily tasks efficiently. 
 
 # Features
-User authentication using JWT (JSON Web Tokens).
-Manage to-do items: Create, Read, Update, and Delete tasks.
-Manage app user: sign up, sign, update profile.
-Caching with In-Memory Cache for faster task retrieval.
-Mockito used for Unit Testing of services and controllers.
-Spring Boot integration for rapid development.
-RESTful API architecture.
-Swagger documentation
+- User authentication using JWT (JSON Web Tokens).
+- Manage to-do items: Create, Read, Update, and Delete tasks.
+- Manage app user: sign up, sign, update profile.
+- Caching with In-Memory Cache for faster task retrieval.
+- **Mockito:** used for Unit Testing of services and controllers.
+- Spring Boot integration for rapid development.
+- RESTful API architecture.
+- Swagger documentation
 
 # Technologies Used
-Spring Boot: For building the application.
-Spring Security with JWT: For securing the app with token-based authentication.
-Spring Data JPA: For database interactions.
-H2 Database: In-memory database for fast and simple development.
-In-Memory Cache (ConcurrentHashMap/other): Used to cache frequently accessed data for better performance.
-Mockito: For unit testing.
-Lombok: To reduce boilerplate code.
-JUnit: For writing and running tests.
+- **Spring Boot:** For building the application.
+- **Spring Security with JWT:** For securing the app with token-based authentication.
+- **Spring Data JPA:** For database interactions.
+- **H2 Database:** In-memory database for fast and simple development.
+- **In-Memory Cache:** Used to cache frequently accessed data for better performance.
+- **Mockito:** For unit testing.
+- **Lombok:** To reduce boilerplate code.
+- **JUnit:** For writing and running tests.
 
 # Setup Instructions
 
 ## Prerequisites
-Java 17+
-Maven 3.6+
-Postman (for testing the API endpoints)
-Swagger (for testing the API endpoints)
+**Java 17+**
+**Maven 3.6+**
+- Postman (for testing the API endpoints)
+- Swagger (for testing the API endpoints)
 
 ## Steps to Run the Application
 
