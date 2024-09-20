@@ -7,6 +7,7 @@ import com.zeero.zeero.exceptions.TodoAppException;
 import com.zeero.zeero.model.Users;
 import com.zeero.zeero.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +27,12 @@ public class UsersService extends BaseService {
     }
 
 
-    @Cacheable(value = "patronCache")
+    @Cacheable(value = "userCache")
     public Page<Users> getAllPatron(Pageable pageable) {
         return usersRepository.findAll(pageable);
     }
 
-    @Cacheable(value = "patronCache", key = "#id")
+    @Cacheable(value = "userCache", key = "#id")
     public Users getAPatron(Long id) {
         return usersRepository.findById(id).orElseThrow(()
                 -> new TodoAppException(ErrorStatus.USER_NOT_FOUND_ERROR, "Patron not found"));

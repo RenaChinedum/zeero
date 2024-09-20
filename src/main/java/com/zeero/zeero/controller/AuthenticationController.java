@@ -23,13 +23,13 @@ public class AuthenticationController {
 
     @PostMapping("/sign-up")
     public UnifiedResponse<Users> createUser(@RequestBody UserDetailRequest request) {
-       Users users = authenticationService.createPatron(request);
+       Users users = authenticationService.createUser(request);
         return new UnifiedResponse<>(users);
     }
 
     @PostMapping("/authenticate")
     public UnifiedResponse<SignInResponse> signIn(@RequestBody SignInRequest request) {
-        SignInResponse response = authenticationService.authenticatePatron(request);
+        SignInResponse response = authenticationService.authenticateUser(request);
         return new UnifiedResponse<>(response);
     }
 }

@@ -1,6 +1,7 @@
 package com.zeero.zeero.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zeero.zeero.audit.AuditEntity;
 import com.zeero.zeero.enums.Priority;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Entity
 @Table(name = "task")
-public class Tasks {
+public class Tasks extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

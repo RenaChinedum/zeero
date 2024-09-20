@@ -9,6 +9,8 @@ import com.zeero.zeero.model.Tasks;
 import com.zeero.zeero.model.Users;
 import com.zeero.zeero.repository.TaskRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,9 +18,10 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.zeero.zeero.enums.Priority.NON_URGENT;
-
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TasksService extends BaseService {
@@ -33,27 +36,34 @@ public class TasksService extends BaseService {
         return new UnifiedResponse<>(new TasksResponse(task));
     }
 
+    @Cacheable(value = "taskCache", key = "#taskId")
     public UnifiedResponse<TasksResponse> getATask(Long taskId) {
         Tasks tasks = getTaskById(taskId);
         return new UnifiedResponse<>(new TasksResponse(tasks));
     }
 
     public UnifiedResponse<TasksResponse> updateTask(Long taskId, TasksRequest request) {
+        Users users = loggedInUser();
         Tasks task = getTaskById(taskId);
-        if (request.getDueDate() != null){
-            validateDueDate(request);
+        if (Objects.equals(task.getUserId(), users.getId())) {
+            if (request.getDueDate() != null) {
+                validateDueDate(request);
+            }
+            task.setTitle(request.getTitle() != null ? request.getTitle() : task.getTitle());
+            task.setDescription(request.getDescription() != null ? request.getDescription() : task.getDescription());
+            task.setDueDate(request.getDueDate() != null ? request.getDueDate() : task.getDueDate());
+            task.setPriority(request.getPriority() != null ? request.getPriority() : task.getPriority());
+            taskRepository.save(task);
+            return new UnifiedResponse<>(new TasksResponse(task));
         }
-        task.setTitle(request.getTitle() != null ? request.getTitle() : task.getTitle());
-        task.setDescription(request.getDescription() != null ? request.getDescription() : task.getDescription());
-        task.setDueDate(request.getDueDate() != null ? request.getDueDate() : task.getDueDate());
-        task.setPriority(request.getPriority() != null ? request.getPriority() : task.getPriority());
-        taskRepository.save(task);
-        return new UnifiedResponse<>(new TasksResponse(task));
+        throw new TodoAppException(ErrorStatus.UNAUTHORIZED_ERROR, ErrorStatus.UNAUTHORIZED_ERROR.getErrorMessage());
     }
 
+    @Cacheable(value = "taskCache")
     public UnifiedResponse<List<TasksResponse>> getAllTask(Pageable pageable) {
         Page<Tasks> tasksPage = taskRepository.findAll(pageable);
         List<Tasks> tasks = tasksPage.getContent();
+        log.info(" =====>Tasks size +++>: {}", tasks.size());
         List<TasksResponse> tasksResponses = new ArrayList<>();
         for (Tasks task : tasks) {
             TasksResponse tasksResponse = new TasksResponse(task);
@@ -62,6 +72,7 @@ public class TasksService extends BaseService {
         return new UnifiedResponse<>(tasksResponses);
     }
 
+    @Cacheable(value = "taskCache")
     public UnifiedResponse<List<TasksResponse>> getAllTaskByAUser(Long userId, Pageable pageable) {
         Page<Tasks> tasksPage = taskRepository.findByUserId(userId, pageable);
         List<Tasks> tasks = tasksPage.getContent();
@@ -74,13 +85,13 @@ public class TasksService extends BaseService {
     }
 
 
-
-    public UnifiedResponse<TasksResponse> completeTask(Long taskId){
+    public UnifiedResponse<TasksResponse> completeTask(Long taskId) {
         Tasks task = getTaskById(taskId);
         task.setCompleted(true);
         taskRepository.save(task);
         return new UnifiedResponse<>(new TasksResponse(task));
     }
+
     public UnifiedResponse<String> deleteTask(Long taskId) {
         Tasks task = getTaskById(taskId);
         taskRepository.delete(task);
@@ -89,13 +100,14 @@ public class TasksService extends BaseService {
 
 
     private Tasks setTasks(TasksRequest request) {
-       Tasks tasks = new Tasks();
-       validateTitle(request);
-       validateDueDate(request);
-       tasks.setTitle(request.getTitle());
-       tasks.setDescription(request.getDescription());
-       tasks.setDueDate(request.getDueDate());
-       return tasks;
+        Tasks tasks = new Tasks();
+        validateTitle(request);
+        validateDueDate(request);
+        log.info(" =====>Due date: {}", request.getDueDate());
+        tasks.setTitle(request.getTitle());
+        tasks.setDescription(request.getDescription());
+        tasks.setDueDate(request.getDueDate());
+        return tasks;
     }
 
     private Tasks getTaskById(Long taskId) {

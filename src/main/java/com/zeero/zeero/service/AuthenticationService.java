@@ -28,7 +28,7 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 
-    public Users createPatron(UserDetailRequest request) {
+    public Users createUser(UserDetailRequest request) {
         Optional<Users> patron = usersRepository.findByEmail(request.getEmail());
         if (patron.isPresent()) {
             log.info("===={}", patron);
@@ -44,7 +44,7 @@ public class AuthenticationService {
         return user;
     }
 
-    public SignInResponse authenticatePatron(SignInRequest request) {
+    public SignInResponse authenticateUser(SignInRequest request) {
         Users user = usersRepository.findByEmail(request.getEmail()).orElseThrow(() ->
                 new TodoAppException(ErrorStatus.USER_NOT_FOUND_ERROR, ErrorStatus.USER_NOT_FOUND_ERROR.getErrorMessage()));
 
